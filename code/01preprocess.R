@@ -1,6 +1,7 @@
 # Code to prcess and concatenate individual weather files
 # by Hannes Becher
 
+#install.packages("chron")
 library(chron)
 setwd("~/git_repos/cave-logs/")
 
@@ -20,6 +21,7 @@ for(i in files[-1]){
 }
 
 head(dat)
+tail(dat)
 dat$date <- sapply(dat$timestamp, function(x) strsplit(x, " ")[[1]][[1]])
 dat$time <- sapply(dat$timestamp, function(x) strsplit(x, " ")[[1]][[2]])
 dat$chron <- chron(dat$date,

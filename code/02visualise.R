@@ -16,7 +16,7 @@ plot(dat$tempC~dat$chron,
 points(dat$hum~dat$chron,
        col="grey")
 grid()
-legend("center",
+legend("topleft",
        fill=c("grey", "black"),
        legend = c("Hum (%)", "Temp (C)"))
 

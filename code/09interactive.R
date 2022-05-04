@@ -18,8 +18,6 @@ dat$time <- sapply(dat$dati, function(x) strsplit(x, " ")[[1]][[2]])
 dat$dati <- chron(dat$date,
                    dat$time,
                    format=c(dates="y-m-d", times="h:m:s"))
-dat$dati == "22-05-02"
-chron(dates. = "22-05-02", format = "y-m-d") + 1
 
 plot.day <- function(day="22-05-02"){
   d = chron(dates. = day, format = "y-m-d")
@@ -33,6 +31,7 @@ plot.day <- function(day="22-05-02"){
        main=day,
        ylab="Rel. humidity (%)",
        xlab="Temperature (C)")
+  grid()
   fullHours <- pdat[substr(as.character(pdat$dati), 14, 18) == "00:00",]
   text(fullHours$tempC,
        fullHours$hum,
@@ -44,8 +43,6 @@ plot.day("22-05-02")
 plot.day("22-05-01")
 plot.day("22-04-30")
 plot.day("22-04-29")
-chron(dates. = "22-05-02", format = "y-m-d") + 1 >
-  chron(dates. = "22-05-02", times. = "00:00:01", format = c(dates="y-m-d", times="h:m:s"))
 
 
 plot.th <- function(day="22-05-02"){
@@ -78,3 +75,29 @@ plot.th("22-04-30")
 plot.th("22-05-01")
 plot.th("22-05-02")
 plot.th("22-05-03")
+
+
+# Differentiation and rle to look nto smoothing
+head(dat)
+plot(dat$tempC)
+d01 <- diff(dat$tempC)
+plot(d01)
+d01r <- d01 %/% 0.03 * 0.03
+plot(d01r)
+rle(d01r)$lengths
+rle(diff(dat$tempC))$lengths
+
+diff2 <- function(x, y){
+  a <- numeric()
+  for(i in 2:length(x)){
+    a[i-1] <- (x[i] - x[i-1])/(y[i] - y[i-1])
+  }
+  a
+}
+d02 <- diff2(dat$tempC, dat$hum)
+plot(d02)
+plot(d01)
+plot(d01r)
+rle(d02)
+rle(d01)
+rle(d01r)

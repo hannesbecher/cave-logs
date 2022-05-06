@@ -2,8 +2,10 @@
 # by Hannes Becher
 
 #install.packages("chron")
+#install.packages("changepoint")
 #?chron
 library(chron)
+library(changepoint)
 library(rgl)
 setwd("~/git_repos/cave-logs/")
 dat <- read.table("data/Cave_log_from_20220428_to_20220507_.csv",
@@ -88,6 +90,20 @@ head(dat)
 plot(dat$tempC)
 d01 <- diff(dat$tempC)
 plot(d01)
+
+
+under <- 10^seq(0.1,6, length=100)
+ls <- sapply(under, function(x){
+  length(cpts(cpt.mean(d01, method="PELT", penalty="Manual", pen.value=paste0("1/", x, "*log(n)"))))
+})
+plot(under, ls, log="")
+cpt01 <- cpt.mean(d01, method="PELT", penalty="Manual", pen.value="1/100000*log(n)")
+plot(cpt01)
+
+
+
+abline(v=100000)
+plot(cpt01)
 d01r <- d01 %/% 0.03 * 0.03
 plot(d01r)
 rle(d01r)$lengths
@@ -104,6 +120,19 @@ diff2 <- function(x, y){
 }
 d02 <- diff2(dat$tempC, dat$hum)
 plot(d02)
+sum(is.na(d02))
+sum(is.infinite(d02))
+d02 <- d02[is.finite(d02)]
+ls2 <- sapply(under, function(x){
+  length(cpts(cpt.mean((d02), method="PELT", penalty="Manual", pen.value=paste0("1/", x, "*log(n)"))))
+})
+plot(under, ls2, log="x")
+
+cpt02 <- cpt.mean(d02, method="PELT", penalty="Manual", pen.value="1/100*log(n)")
+str(cpt02)
+signature(cpt02)
+plot(cpt02)
+plot(d02)
 plot(plogis(d02))
 plot(d01)
 plot(d01r)
@@ -113,10 +142,14 @@ sum(ld02[ld02>5])
 rle(d01)
 rle(d01r)
 
+# one day
 dat30 <- dat[dat$dati < chron(dates. = "22-04-30", format = "y-m-d") + 1 &
   dat$dati > chron(dates. = "22-04-30", format = "y-m-d"), ]
 plot(tempC ~ dati,
      data=dat30)
 diff(dat30$temp)
-?diff
-?rle
+d30_02 <- diff2(dat30$temp, dat30$hum)
+plot(d30_02)
+d30_02 <- d30_02[is.finite(d30_02)]
+plot(cpt.mean(d30_02, method = "PELT", penalty="Manual", pen.value = "1/100*log(n)"))
+cpt.mean(d30_02, method = "PELT", penalty="Manual", pen.value = "1/100*log(n)")

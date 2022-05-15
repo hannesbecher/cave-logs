@@ -6,9 +6,10 @@
 #?chron
 library(chron)
 library(changepoint)
-library(rgl)
+
 setwd("~/git_repos/cave-logs/")
-dat <- read.table("data/Cave_log_from_20220428_to_20220507_.csv",
+#dat <- read.table("data/Cave_log_from_20220428_to_20220507_.csv",
+dat <- read.table("data/Cave_log_from_20220505_to_20220516_.csv",
                   sep=",",
                   col.names = c("dati", "tempC", "hum"),
                   skip=1)
@@ -41,6 +42,8 @@ plot.day <- function(day="22-05-02", l=F){
        labels=substr(as.character(fullHours$dati), 10, 12)
   )
 }
+
+
 plot.day("22-05-06")
 plot.day("22-05-05")
 plot.day("22-05-04")
@@ -51,6 +54,17 @@ plot.day("22-04-30")
 plot.day("22-04-30", l=T)
 plot.day("22-04-29")
 
+# per minute
+plot.day("22-05-06")
+plot.day("22-05-07")
+plot.day("22-05-08")
+plot.day("22-05-09")
+plot.day("22-05-10")
+plot.day("22-05-11")
+plot.day("22-05-12")
+plot.day("22-05-13")
+plot.day("22-05-14")
+plot.day("22-05-15")
 
 plot.th <- function(day="22-05-02"){
   d = chron(dates. = day, format = "y-m-d")
@@ -85,6 +99,21 @@ plot.th("22-05-03")
 plot.th("22-05-04")
 plot.th("22-05-05")
 plot.th("22-05-06")
+
+# per minute
+plot.th("22-05-06")
+plot.th("22-05-07")
+plot.th("22-05-08")
+plot.th("22-05-09")
+plot.th("22-05-10")
+plot.th("22-05-11")
+plot.th("22-05-12")
+plot.th("22-05-13")
+plot.th("22-05-14")
+plot.th("22-05-15")
+
+
+
 # Differentiation and rle to look nto smoothing
 head(dat)
 plot(dat$tempC)
@@ -145,6 +174,8 @@ rle(d01r)
 # one day
 dat30 <- dat[dat$dati < chron(dates. = "22-04-30", format = "y-m-d") + 1 &
   dat$dati > chron(dates. = "22-04-30", format = "y-m-d"), ]
+dat30 <- dat[dat$dati < chron(dates. = "22-05-10", format = "y-m-d") + 1 &
+               dat$dati > chron(dates. = "22-05-10", format = "y-m-d"), ]
 plot(tempC ~ dati,
      data=dat30)
 diff(dat30$temp)
@@ -152,4 +183,21 @@ d30_02 <- diff2(dat30$temp, dat30$hum)
 plot(d30_02)
 d30_02 <- d30_02[is.finite(d30_02)]
 plot(cpt.mean(d30_02, method = "PELT", penalty="Manual", pen.value = "1/100*log(n)"))
-cpt.mean(d30_02, method = "PELT", penalty="Manual", pen.value = "1/100*log(n)")
+a <- cpt.mean(d30_02, method = "PELT", penalty="Manual", pen.value = "1/100*log(n)")
+str(a)
+plot(table(diff(a@cpts)))
+ad <- diff(a@cpts)
+adt <- table(ad)
+str(adt)
+plot(cumsum(adt*as.numeric(dimnames(adt)$ad))~
+       as.numeric(dimnames(adt)$ad),
+     ylim=c(0, 1500),
+     type="l",
+     ylab="Cumsum",
+     xlab="Length of run")
+points(cumsum(adt*as.numeric(dimnames(adt)$ad))~
+        as.numeric(dimnames(adt)$ad))
+grid()
+which(diff(a@cpts)==50)
+a@cpts[110:120]
+dat30

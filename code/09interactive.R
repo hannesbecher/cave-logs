@@ -9,7 +9,11 @@ library(changepoint)
 
 setwd("~/git_repos/cave-logs/")
 #dat <- read.table("data/Cave_log_from_20220428_to_20220507_.csv",
-dat <- read.table("data/Cave_log_from_20220505_to_20220516_.csv",
+# dat <- read.table("data/Cave_log_from_20220505_to_20220516_.csv",
+#                   sep=",",
+#                   col.names = c("dati", "tempC", "hum"),
+#                   skip=1)
+dat <- read.table("data/bumpy/Bumpy_log_from_20220926_to_20221031_.csv",
                   sep=",",
                   col.names = c("dati", "tempC", "hum"),
                   skip=1)
@@ -44,6 +48,14 @@ plot.day <- function(day="22-05-02", l=F){
 }
 
 
+head(dat)
+plot(tempC~dati,
+     data=dat,
+     ylim=c(15, 90))
+points(hum~dati,
+     data=dat,
+     col="grey")
+grid()
 plot.day("22-05-06")
 plot.day("22-05-05")
 plot.day("22-05-04")
@@ -91,9 +103,11 @@ plot.th <- function(day="22-05-02"){
   # )
 }
 
-plot.th("22-04-29")
-plot.th("22-04-30")
-plot.th("22-05-01")
+plot.th("22-10-29")
+plot.th("22-10-30")
+plot.th("22-10-21")
+plot.th("22-10-22")
+plot.th("22-10-23")
 plot.th("22-05-02")
 plot.th("22-05-03")
 plot.th("22-05-04")

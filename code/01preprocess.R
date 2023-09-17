@@ -1,4 +1,4 @@
-# Code to prcess and concatenate individual weather files
+# Code to process and concatenate individual weather files
 # by Hannes Becher
 
 #install.packages("chron")

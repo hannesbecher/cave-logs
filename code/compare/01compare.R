@@ -87,7 +87,80 @@ tail(mm)
 plot(mm$TempF, resid(lm04))
 
 
+lm10 <- lm(TempF~1,
+           data=mm)
+lm11 <- lm(TempF~TempR,
+           data=mm)
 
+lm14 <- lm(TempF~TempR+cos(piDays) + sin(piDays),
+           data=mm)
+
+summary(lm10)
+summary(lm11)
+summary(lm14)
+anova(lm10, lm11, lm14)
+
+plot(TempF~I(piDays/2/pi-53*365),
+     data=mm,
+     xlim=c(180, 200))
+plot(TempF~I(piDays/2/pi-53*365),
+     data=mm)
+points(fitted(lm10)~I(piDays/2/pi-53*365),
+       data=mm,
+       type="l",
+       col=8, lwd=2)
+points(fitted(lm11)~I(piDays/2/pi-53*365),
+       data=mm,
+       type="l",
+       col=2, lwd=2)
+points(fitted(lm14)~I(piDays/2/pi-53*365),
+       data=mm,
+       type="l",
+       col=3, lwd=2)
+plot(fitted(lm14), mm$TempF)
+abline(0, 1, col=8, lwd=2)
+plot(TempF~TempR,
+     data=mm,
+     type="l")
+abline(0, 1, col=8, lwd=2)
+grid()
+
+plot(TempF~Time,
+     data=mm,
+     type="l",
+     lwd=2
+)
+grid()
+points(TempR~Time,
+data=mm,
+type="l",
+col=2,
+lwd=2
+)
+
+
+plot(TempF ~ Time,
+     data=mm,
+     type="l",
+     lwd=2,
+     xlim=c(1686000000, 1688000000))
+
+axTicks(1)
+points(fitted(lm14)~Time,
+       data=mm,
+       col=3,
+       type="l",
+       lwd=2)
+points(fitted(lm11)~Time,
+       data=mm,
+       col=2,
+       type="l",
+       lwd=2)
+# looks like outliers in the F temperatures. Is that from touching the sensor in the mornings?
+
+lm21 <- lm(TempR~TempF,
+           data=mm)
+summary(lm21)
 # GAMs --------------------------------------------------------------------
 
 

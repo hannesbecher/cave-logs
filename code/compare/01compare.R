@@ -3,7 +3,7 @@
 setwd("~/git_repos/cave-logs/")
 
 # front door
-datF <- read.table("data/Front door_log_from_20230106_to_20230917_.csv",
+datF <- read.table("data/Front door_log_from_20231001_to_20231105_.csv",
                    sep=",",
                    header=T, fill = T
                    )[,1:3]
@@ -11,7 +11,7 @@ head(datF)
 names(datF) <- c("Time", "TempF", "HumF")
 
 # rec room
-datR <- read.table("data/Rec room_log_from_20230516_to_20230917_.csv",
+datR <- read.table("data/Rec room_log_from_20231001_to_20231105_.csv",
                    sep=",",
                    header=T,
                    fill=T)[,1:3]
@@ -26,10 +26,16 @@ datR$Time <- as.POSIXct(datR$Time)
 
 mm <- merge(datR, datF, by="Time")
 head(mm)
+tail(mm)
+head(mm[22000:nrow(mm),])
 mm$piDays <- as.numeric(mm$Time)/60/60/24*2*pi
 str(mm)
 plot(-cos(mm$piDays)[1:100])
 plot(TempF ~ TempR, data=mm[1:1000,])
+plot(TempF ~ TempR, data=mm[22000:nrow(mm),], type="l")
+plot(TempR ~ Time, data=mm[20000:nrow(mm),], type="l", ylim=c(0, 20))
+lines(TempF ~ Time, data=mm[20000:nrow(mm),], col=2)
+grid()
 24*6
 ?ar
 ar(lh)
